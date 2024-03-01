@@ -1,0 +1,22 @@
+{
+    "environment": {
+        "name": "Local",
+        "production": false
+    },
+    "appInsights": {
+        "instrumentationKey": ""
+    },
+    "logging": {
+        "console": true,
+        "appInsights": false
+    },
+    "api": {
+        "1url": "http://devapi.myproduction.cloud",
+        "url": "https://localhost:1001"
+    },
+    "buildInfo": {
+        "number": "1.0.0.0",
+        "createdOn": "28-Feb-2024 12:15 GMT"
+    },
+    "environments": []
+}
