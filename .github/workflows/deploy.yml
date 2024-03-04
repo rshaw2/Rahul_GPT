@@ -55,7 +55,6 @@ jobs:
           az logout
   build-and-deploy-client-app:
     runs-on: ubuntu-latest
-    needs: build-and-deploy-api
     defaults:
       run:
         working-directory: ./ClientApp
@@ -92,6 +91,13 @@ jobs:
         with:
           app-name: ${{ secrets.AZURE_CLIENT_APP_NAME }}
           package: ./ClientApp/dist/codezen-template
+
+      # Deploy to Azure Web service
+      - name: Run Azure webapp deploy action using Azure Credentials
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ secrets.AZURE_CLIENT_APP_NAME }}
+          package: ./ClientApp/web.config
 
       - name: Logout from Azure
         run: |
