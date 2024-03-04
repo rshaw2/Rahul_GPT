@@ -11,8 +11,7 @@
         "appInsights": false
     },
     "api": {
-        "1url": "http://devapi.myproduction.cloud",
-        "url": "https://localhost:1001"
+        "url": "https://ntlowcodeapi.azurewebsites.net"
     },
     "buildInfo": {
         "number": "1.0.0.0",
