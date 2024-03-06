@@ -7,19 +7,13 @@ import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class AuthService {
-  private loggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-
-  get isLoggedIn() {
-    return this.loggedIn.asObservable();
-  }
-
   constructor(
     private router: Router,
     private http: HttpClient
   ) { }
 
   get route() {
-    let baseUrl = AppConfigService.appConfig ? AppConfigService.appConfig.api.url : 'https://localhost:7258';
+    let baseUrl = AppConfigService.appConfig ? AppConfigService.appConfig.api.url : '';
     return `${baseUrl}/api/user-account/`;
   }
 
@@ -28,8 +22,8 @@ export class AuthService {
     return this.http.post<any>(url, login);
   }
 
-  logout() {
-    this.loggedIn.next(false);
-    this.router.navigate(['/login']);
+  refreshToken(refreshToken: string): Observable<any> {
+    const url = this.route + 'refresh';
+    return this.http.post<any>(url, { refreshToken: refreshToken });
   }
 }

@@ -1,17 +1,16 @@
-
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { AuthService } from './auth/auth.service';
-import { AuthGuard } from './auth/auth.guard';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HomeModule } from './home/home.module';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AppConfigService } from './app-config.service';
+import { PermissionsService } from './angular-app-services/permissions.service';
+import { HttpRequestInterceptor } from './angular-app-services/Interceptor/http.interceptor';
 
 
 @NgModule({
@@ -31,8 +30,13 @@ import { AppConfigService } from './app-config.service';
     BrowserModule
   ],
   providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpRequestInterceptor,
+      multi: true,
+    },
     AuthService,
-    AuthGuard,
+    PermissionsService,
     {
       provide: APP_INITIALIZER,
       useFactory: (appConfig: AppConfigService) => () => {

@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { LoginInfoPayload } from './login-info-payload';
 import { Subject, first, takeUntil } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
+import { TokenService } from '../angular-app-services/token.service';
 
 
 @Component({
@@ -15,12 +16,18 @@ export class LoginComponent implements OnInit {
   form!: FormGroup;
   private formSubmitAttempt: boolean = false;
   protected destroy$ = new Subject();
+  hide = true;
   constructor(
     private router: Router,
     private fb: FormBuilder,
     private authService: AuthService,
-    private route: ActivatedRoute
-  ) {}
+    private route: ActivatedRoute,
+    private tokenService: TokenService,
+  ) {
+    if (!this.tokenService.isAuthTokenExpired()) {
+      this.navigateTo();
+    }
+  }
 
   ngOnInit() {
     this.form = this.fb.group({
@@ -41,16 +48,17 @@ export class LoginComponent implements OnInit {
       let loginDetail: LoginInfoPayload = {
         userName: this.form.value.userName,
         password: this.form.value.password
-    };
-    this.authService.login(loginDetail)
+      };
+      this.authService.login(loginDetail)
         .pipe(first(), takeUntil(this.destroy$))
         .subscribe({
-            next: (user) => {
-                this.navigateTo();            
-            }
-        });      
+          next: (token: any) => {
+            this.tokenService.setToken(token);
+            this.navigateTo();
+          }
+        });
     }
-    this.formSubmitAttempt = true;    
+    this.formSubmitAttempt = true;
   }
 
   private navigateTo(): void {
@@ -65,5 +73,5 @@ export class LoginComponent implements OnInit {
   ngOnDestroy(): void {
     this.destroy$.next(true);
     this.destroy$.complete();
-}
+  }
 }
